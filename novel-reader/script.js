@@ -1,13 +1,21 @@
-document.getElementById("novelSelector").addEventListener("change", function () {
+document.addEventListener("DOMContentLoaded", function () {
+  const selector = document.getElementById("novelSelector");
+  const contentDiv = document.getElementById("novelContent");
+
+  selector.addEventListener("change", function () {
     const file = this.value;
+
     fetch(file)
-      .then((response) => response.text())
-      .then((text) => {
-        document.getElementById("novelContent").textContent = text;
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.text();
       })
-      .catch((error) => {
-        document.getElementById("novelContent").textContent = "Error loading novel.";
-        console.error(error);
+      .then((text) => {
+        contentDiv.textContent = text;
+      })
+      .catch((err) => {
+        contentDiv.textContent = "⚠️ Failed to load novel.";
+        console.error(err);
       });
   });
-  
+});
